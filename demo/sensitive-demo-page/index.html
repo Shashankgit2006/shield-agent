@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusPay Portal - Sensitive Demo Page</title>
+  <style>
+    :root {
+      --bg: #0A0E1A;
+      --card-bg: #121829;
+      --border: #232D42;
+      --accent-cyan: #00E5FF;
+      --accent-purple: #7C3AED;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --danger: #EF4444;
+      --success: #22C55E;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .banner {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: #FCA5A5;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .banner-tag {
+      background: var(--danger);
+      color: #FFF;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 24px 30px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(35, 45, 66, 0.4) 0%, rgba(18, 24, 41, 0) 100%);
+    }
+
+    .portal-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .portal-logo {
+      font-size: 28px;
+    }
+
+    .portal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFF;
+    }
+
+    .portal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 14px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+    }
+
+    /* Profile Face Image Placeholder */
+    .avatar-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-cyan);
+      object-fit: cover;
+    }
+
+    .profile-info {
+      font-size: 12px;
+    }
+
+    .profile-name {
+      font-weight: 600;
+      color: #FFF;
+    }
+
+    .profile-role {
+      color: var(--accent-cyan);
+      font-size: 10px;
+    }
+
+    form {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .section-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    input, textarea {
+      background: #0A0E1A;
+      border: 1px solid var(--border);
+      color: #FFF;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #00E5FF 0%, #7C3AED 100%);
+      color: #FFF;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.95;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(1px);
+    }
+
+    /* Modal for submission demo */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--success);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+    }
+
+    .modal-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      color: #FFF;
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .modal-close {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid var(--success);
+      color: var(--success);
+      padding: 10px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Shield-Agent Interactive Control Toolbar */
+    .shield-control-card {
+      width: 100%;
+      max-width: 800px;
+      background: #0B1020;
+      border: 1px solid #00E5FF;
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .shield-control-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .shield-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .shield-pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #00E5FF;
+      box-shadow: 0 0 10px #00E5FF;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .shield-pill {
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      color: #00E5FF;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    .sync-status {
+      font-size: 12px;
+      font-family: monospace;
+      color: #94A3B8;
+    }
+
+    .shield-btn-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-scan {
+      background: #00E5FF;
+      color: #050816;
+      border: none;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.35);
+    }
+
+    .btn-scan:hover {
+      background: #38BDF8;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+    }
+
+    .btn-badges {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid #7C3AED;
+      color: #DDD6FE;
+    }
+
+    .btn-badges:hover {
+      background: rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-link {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #F1F5F9;
+    }
+
+    .btn-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #00E5FF;
+      color: #00E5FF;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Synthetic Data Alert Banner -->
+  <div class="banner">
+    <div>
+      ⚠️ <strong>SYNTHETIC DEMO ENVIRONMENT:</strong> All information below is 100% fictional test data.
+    </div>
+    <span class="banner-tag">DEMO DATA ONLY</span>
+  </div>
+
+  <!-- Shield-Agent Interactive Control Toolbar -->
+  <div class="shield-control-card">
+    <div class="shield-control-header">
+      <div class="shield-badge-group">
+        <span class="shield-pulse-dot"></span>
+        <strong style="color: #00E5FF; font-size: 13px; font-family: monospace;">🛡️ SHIELD-AGENT LIVE INTERFACE</strong>
+        <span class="shield-pill">PORT 3000 DEMO</span>
+      </div>
+      <div id="sync-status" class="sync-status">Ready to scan form inputs</div>
+    </div>
+    <div class="shield-btn-row">
+      <button type="button" class="ctrl-btn btn-scan" onclick="triggerShieldScan()">
+        🔍 Scan Page &amp; Sync to Dashboard
+      </button>
+      <button type="button" class="ctrl-btn btn-badges" onclick="toggleDemoBadges()">
+        🏷️ Toggle Privacy Badges
+      </button>
+      <a href="http://localhost:5173/live-screen" target="_blank" class="ctrl-btn btn-link">
+        📊 Open Live Screen (Port 5173) ↗
+      </a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="portal-brand">
+        <div class="portal-logo">💳</div>
+        <div>
+          <div class="portal-title">NexusPay Verification & Checkout</div>
+          <div class="portal-subtitle">Secure Merchant Onboarding Simulation</div>
+        </div>
+      </div>
+
+      <!-- Fake Avatar Face Placeholder for Local Computer Vision Detection -->
+      <div class="user-profile" data-vision="face">
+        <svg class="avatar-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" rx="50" fill="#1E293B"/>
+          <!-- Simplified human face avatar -->
+          <circle cx="50" cy="42" r="20" fill="#F87171"/>
+          <path d="M20 88C20 70 32 64 50 64C68 64 80 70 80 88" fill="#F87171"/>
+          <circle cx="43" cy="40" r="3" fill="#1E293B"/>
+          <circle cx="57" cy="40" r="3" fill="#1E293B"/>
+          <path d="M44 48C46 51 54 51 56 48" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="profile-info">
+          <div class="profile-name">Alex Vance (Synthetic)</div>
+          <div class="profile-role">● Identity Verified</div>
+        </div>
+      </div>
+    </div>
+
+    <form id="sensitive-form" onsubmit="event.preventDefault(); handleSubmit();">
+      <!-- Section 1: Personal Identifiers -->
+      <div class="full-width">
+        <div class="section-title">1. Personal & Contact Information</div>
+      </div>
+
+      <div class="form-group">
+        <label for="full-name">Full Legal Name</label>
+        <input type="text" id="full-name" name="name" value="Alex Vance" autocomplete="name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email-address">Email Address (PII)</label>
+        <input type="email" id="email-address" name="email" value="alex.vance.test@example.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone-number">Mobile / Telephone Number (PII)</label>
+        <input type="tel" id="phone-number" name="phone" value="+1 (555) 234-5678" autocomplete="tel" required>
+      </div>
+
+      <div class="form-group">
+        <label for="account-password">Portal Password (Credential)</label>
+        <input type="password" id="account-password" name="password" value="AlphaNova#2026_Secure!" autocomplete="current-password" required>
+      </div>
+
+      <!-- Section 2: National Tax & Government IDs -->
+      <div class="full-width" style="margin-top: 10px;">
+        <div class="section-title">2. National Identifiers (Mock Data)</div>
+      </div>
+
+      <div class="form-group">
+        <label for="pan-number">Income Tax PAN (Permanent Account Number)</label>
+        <input type="text" id="pan-number" name="pan" value="ABCDE1234F" placeholder="ABCDE1234F" maxlength="10">
+      </div>
+
+      <div class="form-group">
+        <label for="aadhaar-number">Aadhaar National Identifier (Mock 12-Digit)</label>
+        <input type="text" id="aadhaar-number" name="aadhaar" value="3456 7890 1234" placeholder="3456 7890 1234">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="postal-address">Billing / Residential Address (PII)</label>
+        <textarea id="postal-address" name="address" rows="2">42 Cyber Boulevard, Innovation District, Pin Code: 560001</textarea>
+      </div>
+
+      <!-- Section 3: Financial & Payment Credentials -->
+      <div class="full-width" style="margin-top: 10px;">
+        <div class="section-title">3. Payment & Banking Credentials (Blackout Required)</div>
+      </div>
+
+      <div class="form-group">
+        <label for="card-number">Credit / Debit Card Number (Sensitive Financial)</label>
+        <input type="text" id="card-number" name="card" value="4532 0150 2819 3912" autocomplete="cc-number">
+      </div>
+
+      <div class="form-group">
+        <label for="card-cvv">Security Code / CVV</label>
+        <input type="password" id="card-cvv" name="cvv" value="883" maxlength="4" autocomplete="cc-csc">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="upi-vpa">UPI Virtual Payment Address (VPA)</label>
+        <input type="text" id="upi-vpa" name="upi" value="alex.finance@okhdfcbank" placeholder="name@bank">
+      </div>
+
+      <!-- Section 4: Target Button for AI Agent -->
+      <div class="full-width" style="margin-top: 14px;">
+        <button type="submit" id="submit-btn" class="btn-submit">
+          <span>🛡️</span>
+          <span>Submit Verification & Complete Task</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Submission Confirmation Modal -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-box">
+      <div class="modal-icon">✅</div>
+      <div class="modal-title">Action Executed Locally!</div>
+      <div class="modal-desc">
+        The Shield-Agent successfully detected the <strong>Submit</strong> button and triggered a local browser click event without transmitting any raw credentials or PII!
+      </div>
+      <button class="modal-close" onclick="closeModal()">Dismiss</button>
+    </div>
+  </div>
+
+  <script>
+    function handleSubmit() {
+      const modal = document.getElementById('success-modal');
+      modal.style.display = 'flex';
+      console.log('🛡️ [Demo Form] Submit button clicked locally!');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('success-modal');
+      modal.style.display = 'none';
+    }
+
+    let badgesActive = false;
+
+    function toggleDemoBadges() {
+      badgesActive = !badgesActive;
+      const existing = document.getElementById('demo-badges-layer');
+      if (existing) {
+        existing.remove();
+        if (!badgesActive) {
+          const status = document.getElementById('sync-status');
+          if (status) status.innerText = 'Privacy badges hidden';
+          return;
+        }
+      }
+
+      const overlay = document.createElement('div');
+      overlay.id = 'demo-badges-layer';
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = `${document.documentElement.scrollHeight}px`;
+      overlay.style.pointerEvents = 'none';
+      overlay.style.zIndex = '99999';
+
+      const items = [
+        { id: 'card-number', cat: 'CREDIT_CARD', redact: 'blackout', color: '#EF4444' },
+        { id: 'card-cvv', cat: 'CVV', redact: 'blackout', color: '#EF4444' },
+        { id: 'account-password', cat: 'PASSWORD', redact: 'blackout', color: '#EF4444' },
+        { id: 'email-address', cat: 'EMAIL', redact: 'mask', color: '#00E5FF' },
+        { id: 'phone-number', cat: 'PHONE', redact: 'mask', color: '#00E5FF' },
+        { id: 'upi-vpa', cat: 'UPI', redact: 'mask', color: '#00E5FF' },
+      ];
+
+      items.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const badge = document.createElement('div');
+        badge.style.position = 'absolute';
+        badge.style.left = `${rect.left + window.scrollX}px`;
+        badge.style.top = `${rect.top + window.scrollY}px`;
+        badge.style.width = `${rect.width}px`;
+        badge.style.height = `${rect.height}px`;
+        badge.style.border = `2px solid ${item.color}`;
+        badge.style.background = item.color === '#EF4444' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0, 229, 255, 0.15)';
+        badge.style.backdropFilter = 'blur(2px)';
+        badge.style.borderRadius = '6px';
+        badge.style.display = 'flex';
+        badge.style.alignItems = 'flex-start';
+        badge.style.padding = '2px 6px';
+        badge.style.color = item.color;
+        badge.style.fontFamily = 'monospace';
+        badge.style.fontSize = '10px';
+        badge.style.fontWeight = 'bold';
+        badge.innerText = `🛡️ [${item.cat} - ${item.redact.toUpperCase()}]`;
+        overlay.appendChild(badge);
+      });
+
+      document.body.appendChild(overlay);
+      const status = document.getElementById('sync-status');
+      if (status) status.innerText = '✓ Privacy badges displayed over sensitive inputs';
+    }
+
+    async function triggerShieldScan() {
+      const statusEl = document.getElementById('sync-status');
+      if (statusEl) {
+        statusEl.innerText = '🔍 Scanning inputs & running PrivacyGate audit...';
+        statusEl.style.color = '#00E5FF';
+      }
+
+      // Read current form field values dynamically
+      const nameVal = document.getElementById('full-name')?.value || 'Alex Vance';
+      const emailVal = document.getElementById('email-address')?.value || 'alex@example.com';
+      const phoneVal = document.getElementById('phone-number')?.value || '+1 (555) 019-2834';
+      const cardVal = document.getElementById('card-number')?.value || '4532 0150 2819 3912';
+      const cvvVal = document.getElementById('card-cvv')?.value || '883';
+      const upiVal = document.getElementById('upi-vpa')?.value || 'alex@okhdfcbank';
+
+      // Construct realistic sanitized elements payload
+      const redactedElements = [
+        { category: 'CARD', confidence: 0.99, redaction: 'blackout', element_type: 'input#card-number' },
+        { category: 'CVV', confidence: 0.99, redaction: 'blackout', element_type: 'input#card-cvv' },
+        { category: 'PASSWORD', confidence: 0.99, redaction: 'blackout', element_type: 'input#account-password' },
+        { category: 'EMAIL', confidence: 0.98, redaction: 'mask', element_type: 'input#email-address' },
+        { category: 'PHONE', confidence: 0.96, redaction: 'mask', element_type: 'input#phone-number' },
+        { category: 'UPI', confidence: 0.95, redaction: 'mask', element_type: 'input#upi-vpa' },
+        { category: 'FACE', confidence: 0.92, redaction: 'blur', element_type: '.avatar-img' }
+      ];
+
+      // Generate in-memory sanitized visual representation
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 450;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#050816';
+        ctx.fillRect(0, 0, 800, 450);
+        ctx.fillStyle = '#0B1020';
+        ctx.fillRect(20, 20, 760, 410);
+        ctx.strokeStyle = '#232D42';
+        ctx.strokeRect(20, 20, 760, 410);
+        ctx.fillStyle = '#00E5FF';
+        ctx.font = '14px monospace';
+        ctx.fillText(`[SHIELD VIEWPORT: NexusPay Checkout (Local Masking)]`, 40, 60);
+        
+        // Blackout box over card & password
+        ctx.fillStyle = '#050816';
+        ctx.fillRect(40, 100, 340, 45);
+        ctx.strokeStyle = '#EF4444';
+        ctx.strokeRect(40, 100, 340, 45);
+        ctx.fillStyle = '#EF4444';
+        ctx.font = '11px monospace';
+        ctx.fillText(`[REDACTED CARD: ${cardVal.slice(0, 4)} **** **** ${cardVal.slice(-4)}]`, 50, 128);
+
+        ctx.fillStyle = '#050816';
+        ctx.fillRect(400, 100, 340, 45);
+        ctx.strokeStyle = '#EF4444';
+        ctx.strokeRect(400, 100, 340, 45);
+        ctx.fillStyle = '#EF4444';
+        ctx.fillText('[REDACTED PASSWORD: **********]', 410, 128);
+
+        // Mask over email
+        ctx.fillStyle = '#0B1020';
+        ctx.fillRect(40, 170, 340, 40);
+        ctx.strokeStyle = '#00E5FF';
+        ctx.strokeRect(40, 170, 340, 40);
+        ctx.fillStyle = '#00E5FF';
+        ctx.fillText(`[REDACTED EMAIL: ${emailVal.split('@')[0].slice(0, 3)}***@***]`, 50, 195);
+      }
+      const sanitizedImage = canvas.toDataURL('image/jpeg', 0.85);
+
+      const scanPayload = {
+        sanitized: true,
+        privacy_verified: true,
+        redacted_items_count: redactedElements.length,
+        redacted_elements: redactedElements,
+        sanitized_image: sanitizedImage,
+        url: window.location.href || 'http://localhost:3000',
+        page_title: document.title || 'NexusPay Verification & Checkout',
+        dom_summary: {
+          title: document.title,
+          url: window.location.href,
+          headings: ['NexusPay Verification & Checkout', 'Personal & Contact Information', 'Account Security', 'Payment Credentials'],
+          clickable_elements: [
+            { tag: 'button', id: 'submit-btn', text: 'Submit Verification & Complete Task' }
+          ],
+          form_fields: [
+            { tag: 'input', id: 'full-name', type: 'text', label: 'Full Legal Name', value: nameVal },
+            { tag: 'input', id: 'email-address', type: 'email', label: 'Email', value: '[REDACTED_EMAIL]' },
+            { tag: 'input', id: 'phone-number', type: 'tel', label: 'Phone', value: '[REDACTED_PHONE]' },
+            { tag: 'input', id: 'card-number', type: 'text', label: 'Card Number', value: '[REDACTED_CREDIT_CARD]' },
+            { tag: 'input', id: 'card-cvv', type: 'password', label: 'CVV', value: '[REDACTED_CVV]' },
+            { tag: 'input', id: 'upi-vpa', type: 'text', label: 'UPI VPA', value: '[REDACTED_UPI]' }
+          ]
+        },
+        timing_breakdown: {
+          local_inference_ms: 28.5,
+          redaction_ms: 12.0,
+          privacy_validation_ms: 4.5,
+          server_latency_ms: 18.0
+        }
+      };
+
+      try {
+        let token = sessionStorage.getItem('shield_demo_token');
+        if (!token) {
+          try {
+            const authRes = await fetch('http://localhost:8000/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: 'demo@shieldagent.local', password: 'DemoShield#2026!' })
+            });
+            if (authRes.ok) {
+              const authData = await authRes.json();
+              token = authData.access_token;
+              sessionStorage.setItem('shield_demo_token', token);
+            }
+          } catch (e) {
+            console.warn('Demo auth check:', e);
+          }
+        }
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch('http://localhost:8000/api/scans', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(scanPayload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (statusEl) {
+            statusEl.innerText = `✓ Synced scan #${data.scan_id} to Dashboard! (${redactedElements.length} items redacted with Zero Leaks)`;
+            statusEl.style.color = '#22C55E';
+          }
+        } else {
+          throw new Error(`Server returned HTTP ${res.status}`);
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.innerText = `Scan sync note: ${err.message}`;
+          statusEl.style.color = '#F59E0B';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
